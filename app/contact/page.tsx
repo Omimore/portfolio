@@ -1,6 +1,7 @@
 "use client"
 import { motion } from "framer-motion"
 import ContactForm from "@/components/contact-form"
+import Navigation from "@/components/navigation"
 
 export default function ContactPage() {
   const socialLinks = [
@@ -30,102 +31,110 @@ export default function ContactPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-background pt-20">
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-12 text-center"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">
-            Get In Touch
-          </h1>
-          <p className="text-foreground/60 text-lg">
-            Have a project in mind? Let's collaborate and create something amazing together.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <ContactForm />
-          </motion.div>
-
-          {/* Contact Info & Social Links */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Email</h3>
-                <a
-                  href="mailto:omimore2407@gmail.com"
-                  className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                >
-                  omimore2407@gmail.com
-                </a>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Location</h3>
-                <p className="text-foreground/80">Mumbai, India</p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Availability</h3>
-                <p className="text-foreground/80">Available for freelance projects and full-time opportunities</p>
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div>
-              <h3 className="text-lg font-semibold text-primary mb-4">Connect With Me</h3>
-              <div className="flex gap-4">
-                {socialLinks.map((link, i) => (
-                  <motion.a
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-3 bg-card border border-border/50 rounded-lg text-foreground hover:text-primary hover:border-primary/50 transition-all duration-300"
-                    title={link.name}
-                  >
-                    {link.icon}
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Stats */}
+    <>
+      <Navigation activeSection="contact" />
+      <main className="min-h-screen bg-background">
+        <section id="contact" className="relative py-20 px-4 md:px-8 bg-gradient-to-b from-background to-card/20 pt-32">
+          <div className="max-w-4xl mx-auto">
             <motion.div
-              whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(34, 211, 238, 0.1)" }}
-              className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6 transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="mb-12"
             >
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-2xl font-bold text-primary">20+</p>
-                  <p className="text-foreground/60 text-sm">Projects Completed</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-accent">1+</p>
-                  <p className="text-foreground/60 text-sm">Years Experience</p>
-                </div>
-              </div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">
+                Get In Touch
+              </h2>
+              <p className="text-foreground/60 text-lg">
+                Have a project in mind? Let's collaborate and create something amazing together.
+              </p>
             </motion.div>
-          </motion.div>
-        </div>
-      </div>
-    </main>
+
+            <div className="grid md:grid-cols-2 gap-12">
+              {/* Contact Form */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+              >
+                <ContactForm />
+              </motion.div>
+
+              {/* Contact Info & Social Links */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="space-y-8"
+              >
+                {/* Contact Info */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary mb-2">Email</h3>
+                    <a
+                      href="mailto:omimore2407@gmail.com"
+                      className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                    >
+                      omimore2407@gmail.com
+                    </a>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary mb-2">Location</h3>
+                    <p className="text-foreground/80">Mumbai, India</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary mb-2">Availability</h3>
+                    <p className="text-foreground/80">Available for freelance projects and full-time opportunities</p>
+                  </div>
+                </div>
+
+                {/* Social Links */}
+                <div>
+                  <h3 className="text-lg font-semibold text-primary mb-4">Connect With Me</h3>
+                  <div className="flex gap-4">
+                    {socialLinks.map((link, i) => (
+                      <motion.a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-3 bg-card border border-border/50 rounded-lg text-foreground hover:text-primary hover:border-primary/50 transition-all duration-300"
+                        title={link.name}
+                      >
+                        {link.icon}
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick Stats */}
+                <motion.div
+                  whileHover={{ y: -5, boxShadow: "0 10px 30px rgba(34, 211, 238, 0.1)" }}
+                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-lg p-6 transition-all duration-300"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-2xl font-bold text-primary">20+</p>
+                      <p className="text-foreground/60 text-sm">Projects Completed</p>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-accent">1+</p>
+                      <p className="text-foreground/60 text-sm">Years Experience</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 interface NavigationProps {
   activeSection: string
@@ -16,6 +17,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
     { id: "skills", label: "Skills" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
+    { id: "contact", label: "Contact" },
   ]
 
   const scrollToSection = (id: string) => {
@@ -42,20 +44,37 @@ export default function Navigation({ activeSection }: NavigationProps) {
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
             {sections.map((section) => (
-              <motion.button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`text-sm font-medium transition-all duration-300 ${
-                    activeSection === section.id ? "text-cyan-400" : "text-foreground/60 hover:text-cyan-300"
-                  }`}
-              >
-                {section.label}
-                {activeSection === section.id && (
-                    <motion.div layoutId="underline" className="h-0.5 bg-cyan-400 mt-1" transition={{ duration: 0.3 }} />
-                )}
-              </motion.button>
+              section.id === "contact" ? (
+                <Link key={section.id} href="/contact">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`text-sm font-medium transition-all duration-300 ${
+                        activeSection === section.id ? "text-cyan-400" : "text-foreground/60 hover:text-cyan-300"
+                      }`}
+                  >
+                    {section.label}
+                    {activeSection === section.id && (
+                        <motion.div layoutId="underline" className="h-0.5 bg-cyan-400 mt-1" transition={{ duration: 0.3 }} />
+                    )}
+                  </motion.button>
+                </Link>
+              ) : (
+                <motion.button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`text-sm font-medium transition-all duration-300 ${
+                      activeSection === section.id ? "text-cyan-400" : "text-foreground/60 hover:text-cyan-300"
+                    }`}
+                >
+                  {section.label}
+                  {activeSection === section.id && (
+                      <motion.div layoutId="underline" className="h-0.5 bg-cyan-400 mt-1" transition={{ duration: 0.3 }} />
+                  )}
+                </motion.button>
+              )
             ))}
           </div>
 
@@ -82,18 +101,33 @@ export default function Navigation({ activeSection }: NavigationProps) {
             className="md:hidden pb-4 space-y-2"
           >
             {sections.map((section) => (
-              <motion.button
-                key={section.id}
-                onClick={() => scrollToSection(section.id)}
-                whileHover={{ x: 5 }}
-                className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
-                  activeSection === section.id
-                    ? "bg-cyan-400 text-white"
-                    : "text-foreground/60 hover:bg-card"
-                }`}
-              >
-                {section.label}
-              </motion.button>
+              section.id === "contact" ? (
+                <Link key={section.id} href="/contact" onClick={() => setIsOpen(false)}>
+                  <motion.button
+                    whileHover={{ x: 5 }}
+                    className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
+                      activeSection === section.id
+                        ? "bg-cyan-400 text-white"
+                        : "text-foreground/60 hover:bg-card"
+                    }`}
+                  >
+                    {section.label}
+                  </motion.button>
+                </Link>
+              ) : (
+                <motion.button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  whileHover={{ x: 5 }}
+                  className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
+                    activeSection === section.id
+                      ? "bg-cyan-400 text-white"
+                      : "text-foreground/60 hover:bg-card"
+                  }`}
+                >
+                  {section.label}
+                </motion.button>
+              )
             ))}
           </motion.div>
         )}

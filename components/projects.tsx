@@ -71,12 +71,12 @@ export default function Projects() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   }
 
   return (
-    <section className="relative py-20 px-4 md:px-8 bg-gradient-to-b from-background to-card/10">
+    <section id="projects" className="relative py-20 px-4 md:px-8 bg-gradient-to-b from-background to-card/10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
