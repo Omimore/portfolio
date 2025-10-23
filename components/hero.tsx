@@ -174,14 +174,14 @@ export default function Hero() {
           >
             View My Work
           </motion.button>
-          <motion.button
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+          <motion.a
+            href="/contact"
             whileHover={{ scale: 1.05, borderColor: "rgb(34, 211, 238)" }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 border border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition-all duration-300"
           >
             Get In Touch
-          </motion.button>
+          </motion.a>
         </motion.div>
       </motion.div>
 

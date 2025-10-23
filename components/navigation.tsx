@@ -16,7 +16,6 @@ export default function Navigation({ activeSection }: NavigationProps) {
     { id: "skills", label: "Skills" },
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
-    { id: "contact", label: "Contact" },
   ]
 
   const scrollToSection = (id: string) => {
