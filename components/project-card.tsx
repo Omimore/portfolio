@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 
 interface ProjectCardProps {
@@ -16,12 +16,21 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
     <motion.div
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="group relative h-96 rounded-lg overflow-hidden bg-card border border-border/50 hover:border-primary/50 transition-colors"
+      onHoverStart={() => !isMobile && setIsHovered(true)}
+      onHoverEnd={() => !isMobile && setIsHovered(false)}
+      onClick={() => isMobile && setIsHovered(!isHovered)}
+      className="group relative h-96 rounded-lg overflow-hidden bg-card border border-border/50 hover:border-primary/50 transition-colors cursor-pointer md:cursor-default"
     >
       {/* Image background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -48,7 +57,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </motion.h3>
         </div>
 
-        {/* Bottom section - expands on hover */}
+        {/* Bottom section - expands on hover or click on mobile */}
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: isHovered ? 1 : 0, height: isHovered ? "auto" : 0 }}
