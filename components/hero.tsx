@@ -1,131 +1,70 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { Suspense, useRef } from "react"
 import { motion } from "framer-motion"
+import { Canvas, useFrame, extend } from "@react-three/fiber"
+import * as THREE from "three"
+import { shaderMaterial } from "@react-three/drei"
+
+// --- Custom Neon Core Shader ---
+const CoreMaterial = shaderMaterial(
+  { time: 0 },
+  `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  `
+    uniform float time;
+    varying vec2 vUv;
+    void main() {
+      float core = 0.31 + 0.17 * sin(time * 2.0 + vUv.x * 6.28);
+      float glow = smoothstep(core, core + 0.15, length(vUv - 0.5));
+      vec3 mainColor = mix(vec3(0, 1, 1), vec3(0,0.2,0.45), vUv.y + 0.2 * sin(time));
+      gl_FragColor = vec4(mainColor, 1.0 - glow);
+    }
+  `
+)
+extend({ CoreMaterial })
+
+function NeonCore() {
+  const ref = useRef()
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.uniforms.time.value = clock.getElapsedTime()
+      ref.current.rotation.y += 0.002
+      ref.current.rotation.x += 0.001
+    }
+  })
+  return (
+    <mesh position={[0, 0, 0]}>
+      <sphereGeometry args={[2.6, 128, 128]} />
+      <coreMaterial ref={ref} side={THREE.DoubleSide} />
+    </mesh>
+  )
+}
 
 export default function Hero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    // Set canvas size
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-    resizeCanvas()
-    window.addEventListener("resize", resizeCanvas)
-
-    // Particle system
-    const particles: Array<{
-      x: number
-      y: number
-      vx: number
-      vy: number
-      radius: number
-      opacity: number
-    }> = []
-
-    // Create particles
-    for (let i = 0; i < 100; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        radius: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.3,
-      })
-    }
-
-    // Mouse move handler
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY }
-    }
-    window.addEventListener("mousemove", handleMouseMove)
-
-    // Animation loop
-    const animate = () => {
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-      gradient.addColorStop(0, "rgba(8, 15, 25, 1)")
-      gradient.addColorStop(1, "rgba(12, 22, 35, 1)")
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      // Update and draw particles
-      particles.forEach((particle, i) => {
-        // Update position
-        particle.x += particle.vx
-        particle.y += particle.vy
-
-        // Bounce off walls
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
-
-        // Keep in bounds
-        particle.x = Math.max(0, Math.min(canvas.width, particle.x))
-        particle.y = Math.max(0, Math.min(canvas.height, particle.y))
-
-        // Mouse interaction
-        const dx = mouseRef.current.x - particle.x
-        const dy = mouseRef.current.y - particle.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
-
-        if (distance < 150) {
-          const angle = Math.atan2(dy, dx)
-          particle.vx -= Math.cos(angle) * 0.15
-          particle.vy -= Math.sin(angle) * 0.15
-        }
-
-        ctx.fillStyle = `rgba(34, 211, 238, ${particle.opacity})`
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Draw connections with cyan
-        for (let j = i + 1; j < particles.length; j++) {
-          const other = particles[j]
-          const dx = other.x - particle.x
-          const dy = other.y - particle.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-
-          if (distance < 150) {
-            ctx.strokeStyle = `rgba(34, 211, 238, ${0.2 * (1 - distance / 150)})`
-            ctx.lineWidth = 1
-            ctx.beginPath()
-            ctx.moveTo(particle.x, particle.y)
-            ctx.lineTo(other.x, other.y)
-            ctx.stroke()
-          }
-        }
-      })
-
-      requestAnimationFrame(animate)
-    }
-
-    animate()
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas)
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
-
   return (
-    <section className="relative w-full h-screen flex items-center justify-center overflow-hidden pt-16">
-      {/* Canvas background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ background: "linear-gradient(135deg, #080f19 0%, #0c1623 100%)" }}
-      />
-
+    <section className="relative w-full h-screen flex items-center justify-center overflow-hidden pt-16 bg-black">
+      {/* Three.js Canvas Neon Core Background */}
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+        <Suspense fallback={null}>
+          <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
+            <ambientLight intensity={0.9} />
+            <NeonCore />
+          </Canvas>
+        </Suspense>
+        {/* Overlay for contrast */}
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            background: "linear-gradient(120deg, rgba(0,18,40,0.56), rgba(0,255,255,0.09) 90%)"
+          }}
+        />
+      </div>
       {/* Content overlay */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -141,7 +80,6 @@ export default function Hero() {
         >
           Hello, I'm Omkar More.
         </motion.p>
-
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -150,7 +88,6 @@ export default function Hero() {
         >
           B.Tech Student & Web Developer
         </motion.h1>
-
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,7 +96,6 @@ export default function Hero() {
         >
           Crafting intelligent web experiences with cutting-edge technology and creative problem-solving
         </motion.p>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,31 +103,39 @@ export default function Hero() {
           className="flex gap-4 justify-center flex-wrap"
         >
           <motion.button
-            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+            onClick={() =>
+              document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })
+            }
             whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(34, 211, 238, 0.5)" }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all duration-300"
           >
             View My Work
           </motion.button>
-          <motion.a
-            href="/contact"
+          <motion.button
+            onClick={() =>
+              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+            }
             whileHover={{ scale: 1.05, borderColor: "rgb(34, 211, 238)" }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 border border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition-all duration-300"
           >
             Let's Talk
-          </motion.a>
+          </motion.button>
         </motion.div>
       </motion.div>
-
       {/* Scroll indicator */}
       <motion.div
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
       >
-        <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-6 h-6 text-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </motion.div>

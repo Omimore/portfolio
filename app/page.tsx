@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import Navigation from "@/components/navigation"
 import Hero from "@/components/hero"
 import About from "@/components/about"
@@ -11,26 +11,37 @@ import Experience from "@/components/experience"
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero")
+  const lastActiveSection = useRef("hero")
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["hero", "about", "skills", "projects", "experience"]
+  const handleScroll = useCallback(() => {
+    const sections = ["hero", "about", "skills", "projects", "experience"]
+    let newActiveSection = activeSection
 
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            setActiveSection(section)
-            break
-          }
+    for (const section of sections) {
+      const element = document.getElementById(section)
+      if (element) {
+        const rect = element.getBoundingClientRect()
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          newActiveSection = section
+          break
         }
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    if (newActiveSection !== lastActiveSection.current) {
+      lastActiveSection.current = newActiveSection
+      setActiveSection(newActiveSection)
+    }
+  }, [activeSection])
+
+  useEffect(() => {
+    const throttledHandleScroll = () => {
+      requestAnimationFrame(handleScroll)
+    }
+
+    window.addEventListener("scroll", throttledHandleScroll)
+    return () => window.removeEventListener("scroll", throttledHandleScroll)
+  }, [handleScroll])
 
   return (
     <main className="min-h-screen bg-background">
