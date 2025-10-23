@@ -50,7 +50,7 @@ export default function Projects() {
       description: "Modern portfolio website with 3D animations and interactive components",
       technologies: ["Next.js", "Framer Motion", "Three.js", "Tailwind CSS"],
       github: "https://github.com",
-      demo: "https://demo.com",
+      demo: "https://omkarmore-portfolio.vercel.app/",
       image: "/portfolio.png",
     },
   ]
