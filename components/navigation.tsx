@@ -32,20 +32,37 @@ export default function Navigation({ activeSection }: NavigationProps) {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/05 backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent"
-          >
-            Omkar More
-          </motion.div>
+          <Link href="/">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent cursor-pointer"
+            >
+              Omkar More
+            </motion.div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
             {sections.map((section) => (
               section.id === "contact" ? (
                 <Link key={section.id} href="/contact">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`text-sm font-medium transition-all duration-300 ${
+                        activeSection === section.id ? "text-cyan-400" : "text-foreground/60 hover:text-cyan-300"
+                      }`}
+                  >
+                    {section.label}
+                    {activeSection === section.id && (
+                        <motion.div layoutId="underline" className="h-0.5 bg-cyan-400 mt-1" transition={{ duration: 0.3 }} />
+                    )}
+                  </motion.button>
+                </Link>
+              ) : section.id === "hero" ? (
+                <Link key={section.id} href="/">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -103,6 +120,19 @@ export default function Navigation({ activeSection }: NavigationProps) {
             {sections.map((section) => (
               section.id === "contact" ? (
                 <Link key={section.id} href="/contact" onClick={() => setIsOpen(false)}>
+                  <motion.button
+                    whileHover={{ x: 5 }}
+                    className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
+                      activeSection === section.id
+                        ? "bg-cyan-400 text-white"
+                        : "text-foreground/60 hover:bg-card"
+                    }`}
+                  >
+                    {section.label}
+                  </motion.button>
+                </Link>
+              ) : section.id === "hero" ? (
+                <Link key={section.id} href="/" onClick={() => setIsOpen(false)}>
                   <motion.button
                     whileHover={{ x: 5 }}
                     className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-300 ${
