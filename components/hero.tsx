@@ -133,6 +133,15 @@ export default function Hero() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 text-center px-4 max-w-4xl"
       >
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          className="text-xl md:text-2xl text-cyan-400 mb-4"
+        >
+          Hello, I'm Omkar More.
+        </motion.p>
+
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

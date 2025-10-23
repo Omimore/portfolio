@@ -37,7 +37,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
             transition={{ duration: 0.5 }}
             className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent"
           >
-            Portfolio
+            Omkar More
           </motion.div>
 
           {/* Desktop Navigation */}
