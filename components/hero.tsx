@@ -180,7 +180,7 @@ export default function Hero() {
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 border border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition-all duration-300"
           >
-            Get In Touch
+            Let's Talk
           </motion.a>
         </motion.div>
       </motion.div>
